@@ -8,7 +8,7 @@ const registerUser = async (req, res) => {
   const userExists = await userModel.findOne({email});
 
   if(userExists){
-    res.status(400).json({
+    return res.status(400).json({
       message: "User exists"
     });
   }
@@ -20,14 +20,14 @@ const registerUser = async (req, res) => {
       firstName, lastName
     },
     email, 
-    hashedPassword
+    password:hashedPassword
   });
 
   const token = jwt.sign({id:user._id}, process.env.JWT_SECRET);
 
   res.cookie('token', token);
 
-  res.status(201).json({
+  return res.status(201).json({
     message: "User registered successfully!",
     user:{
       email: user.email,
@@ -45,15 +45,15 @@ const loginUser = async (req, res) => {
   })
 
   if(!user){
-    res.status(401).json({
+    return res.status(401).json({
       message: "Invalid email or password"
     });
   }
 
-  const decoded = await bcrypt.compare(password, user.hashedPassword);
+  const decoded = await bcrypt.compare(password, user.password);
 
   if(!decoded){
-    res.status(401).json({
+    return res.status(401).json({
       message: "Invalid password"
     });
   }
@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
 
   res.cookie('token', token);
 
-  res.status(200).json({
+  return res.status(200).json({
     message: "User logged in successfully!",
     user: {
       email: user.email,

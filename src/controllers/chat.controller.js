@@ -9,14 +9,9 @@ const createChat = async (req, res) => {
     const chat = await chatModel.create({
       user: user._id,
       title
-    })
-  } catch(error){
-    res.status(500).json({
-      message: error.message
     });
-  }
 
-  res.status(201).json({
+    return res.status(201).json({
     message: "Chat created successfully",
     chat:{
       _id: chat._id,
@@ -25,6 +20,13 @@ const createChat = async (req, res) => {
       user: chat.user
     }
   });
+  } catch(error){
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+
+  
 }
 
 module.exports = {
