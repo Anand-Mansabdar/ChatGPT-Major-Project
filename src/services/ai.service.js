@@ -15,7 +15,9 @@ const generateVector = async (content) => {
     model: "gemini-embedding-001",
     contents: content,
     config:{
-      outputDimensionality: 768
+      outputDimensionality: 768,
+      temperature: 0.2,
+      
     }
   });
   return response.embeddings[0].values;

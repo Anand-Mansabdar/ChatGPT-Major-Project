@@ -6,19 +6,19 @@ const pc = new Pinecone({apiKey: process.env.PINECONE_API_KEY});
 
 const chatGPTIndex = pc.index('cohort-chatgpt');
 
-const createMemory = async ({vector, metaData, messageId}) => {
+const createMemory = async ({vector, metadata, messageId}) => {
     await chatGPTIndex.upsert([{
       id: messageId,
       values: vector,
-      metaData
+      metadata
     }])
 }
 
-const queryMemory = async({queryVector, limit=5, metaData}) => {
+const queryMemory = async({queryVector, limit=5, metadata}) => {
   const data = await chatGPTIndex.query({
     vector: queryVector,
     topK: limit,
-    filter: metaData ? {metaData} : undefined,
+    filter: metadata ? metadata : undefined,
     includeMetadata: true
   });
 
